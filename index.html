@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeuroTrade AI | Stock Prediction</title>
+<style>
+:root{--bg:#080d18;--panel:#101a2b;--panel2:#0d1524;--line:#24334a;--text:#eef5ff;--muted:#91a2bb;--green:#35e6a2;--red:#ff647c;--blue:#61a8ff;--violet:#9d8cff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 10% 0%,#14294a 0,transparent 38%),radial-gradient(ellipse at 90% 10%,#24184a 0,transparent 30%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1250px;margin:auto;padding:22px}.top{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:22px}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--green),var(--blue));display:grid;place-items:center;color:#07111d;font-weight:900;font-size:22px;box-shadow:0 0 30px #35e6a233}.brand h1{font-size:20px;margin:0;letter-spacing:.5px}.brand p{color:var(--muted);font-size:12px;margin:4px 0 0}.badge{border:1px solid #315544;background:#112a29;color:var(--green);padding:8px 12px;border-radius:99px;font-size:12px}
+.hero{display:grid;grid-template-columns:1.55fr .85fr;gap:16px}.card{background:linear-gradient(145deg,#111c2fef,#0c1423f5);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 18px 50px #0002}.eyebrow{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.6px}.price-line{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:10px 0 8px}.price{font-size:clamp(30px,5vw,44px);font-weight:800;letter-spacing:-1.5px}.change{font-size:13px;color:var(--green);background:#10372f;padding:6px 9px;border-radius:8px;margin-bottom:7px}.sub{color:var(--muted);font-size:12px}.controls{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 8px}.select,button{background:#101e32;color:var(--text);border:1px solid #30425d;border-radius:10px;padding:10px 12px;font:inherit;font-size:13px}button{cursor:pointer;transition:.2s}button:hover{border-color:var(--green);transform:translateY(-1px)}button.primary{background:linear-gradient(135deg,#35e6a2,#61a8ff);color:#06111b;border:0;font-weight:800}.chartbox{height:260px;position:relative;margin-top:12px}.chartbox canvas{width:100%;height:100%;display:block}.chart-note{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin-top:8px}.right-stack{display:grid;gap:16px}.prediction{background:linear-gradient(135deg,#182844,#171934);position:relative;overflow:hidden}.prediction:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:#7d74ff16;right:-60px;top:-70px}.predict-val{font-size:32px;font-weight:800;margin:12px 0 4px}.pill{display:inline-block;padding:6px 9px;border-radius:8px;font-size:11px;background:#17362f;color:var(--green)}.meter{height:7px;border-radius:9px;background:#26344b;overflow:hidden;margin:16px 0 8px}.meter span{display:block;height:100%;width:63%;background:linear-gradient(90deg,var(--blue),var(--violet));border-radius:9px}.mini{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{background:#0b1423;border:1px solid #22324a;border-radius:13px;padding:13px}.metric strong{display:block;font-size:18px;margin-top:7px}.metric small{color:var(--muted);font-size:11px}.section{margin-top:16px}.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}.section-title h2{font-size:16px;margin:0}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.signal{display:flex;justify-content:space-between;align-items:center;gap:10px}.signal strong{font-size:14px}.signal span{font-size:11px;color:var(--muted)}.signal .up{color:var(--green)}.signal .down{color:var(--red)}.signal .neutral{color:#ffd479}.progress{height:5px;background:#25334a;border-radius:8px;margin-top:12px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--green));border-radius:8px}.bottom{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:16px}.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{text-align:left;padding:12px 8px;border-bottom:1px solid #233148}.table th{color:var(--muted);font-weight:500}.table tr:last-child td{border-bottom:0}.green{color:var(--green)}.red{color:var(--red)}.notice{margin-top:16px;border:1px solid #59482c;background:#251f17;color:#d9c39a;padding:13px 15px;border-radius:12px;font-size:11px;line-height:1.6}.footer{color:#71839d;font-size:11px;text-align:center;padding:22px 0 8px}.status{display:inline-flex;align-items:center;gap:6px}.dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 10px #35e6a2}
+@media(max-width:850px){.hero,.bottom{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}.chartbox{height:230px}.wrap{padding:14px}.card{padding:16px}.mini{grid-template-columns:1fr 1fr}}
+@media(max-width:430px){.price{font-size:31px}.chartbox{height:200px}.badge{font-size:10px}.mini{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><div class="logo">N</div><div><h1>NEUROTRADE <span style="color:var(--green)">AI</span></h1><p>Intelligent Market Analytics • Learning Dashboard</p></div></div>
+    <div class="badge"><span class="status"><i class="dot"></i> DEMO MODE • SAMPLE DATA</span></div>
+  </header>
+
+  <section class="hero">
+    <div class="card">
+      <div class="eyebrow">Selected asset · Illustrative data</div>
+      <div class="controls">
+        <select id="symbol" class="select" aria-label="Stock symbol">
+          <option value="RELIANCE">RELIANCE · Reliance Industries</option>
+          <option value="TCS">TCS · Tata Consultancy Services</option>
+          <option value="INFY">INFY · Infosys</option>
+          <option value="NIFTY">NIFTY 50 · Index</option>
+        </select>
+        <button id="day">1D</button><button id="week">1W</button><button id="month">1M</button>
+        <button class="primary" id="refresh">↻ Refresh demo</button>
+      </div>
+      <div class="price-line"><div class="price" id="price">₹1,428.60</div><div class="change" id="change">+1.84% ▲</div></div>
+      <div class="sub" id="subtitle">Demo price only · Not a live market quote</div>
+      <div class="chartbox"><canvas id="chart" aria-label="Illustrative stock price chart"></canvas></div>
+      <div class="chart-note"><span>━ Historical sample path</span><span>⋯ Illustrative trend line</span><span id="periodLabel">Period: 1D</span></div>
+    </div>
+    <div class="right-stack">
+      <div class="card prediction">
+        <div class="eyebrow">AI outlook · demo simulation</div>
+        <div class="predict-val" id="outlook">Bullish ↗</div>
+        <span class="pill" id="outlookPill">Illustrative model output</span>
+        <p class="sub" style="line-height:1.7;max-width:340px">यह केवल डेमो संकेत है। वास्तविक प्रशिक्षित AI मॉडल या लाइव डेटा से जुड़ा नहीं है।</p>
+        <div class="meter"><span id="confidenceBar"></span></div>
+        <div class="chart-note"><span>Demo confidence indicator</span><b id="confidence">63%</b></div>
+      </div>
+      <div class="card">
+        <div class="section-title"><h2>Market Snapshot</h2><span class="eyebrow">DEMO</span></div>
+        <div class="mini">
+          <div class="metric"><small>Open</small><strong id="open">₹1,402.20</strong></div>
+          <div class="metric"><small>High</small><strong id="high">₹1,447.80</strong></div>
+          <div class="metric"><small>Low</small><strong id="low">₹1,395.10</strong></div>
+          <div class="metric"><small>Volume</small><strong id="volume">2.4M</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title"><h2>AI Signal Center</h2><span class="eyebrow">Simulated indicators</span></div>
+    <div class="grid3">
+      <div class="card"><div class="signal"><div><strong>Trend Analysis</strong><br><span>Price momentum</span></div><b class="up" id="trend">POSITIVE</b></div><div class="progress"><i id="trendbar" style="width:68%"></i></div></div>
+      <div class="card"><div class="signal"><div><strong>Volatility</strong><br><span>Illustrative risk meter</span></div><b class="neutral" id="volatility">MODERATE</b></div><div class="progress"><i id="volbar" style="width:44%"></i></div></div>
+      <div class="card"><div class="signal"><div><strong>Model Status</strong><br><span>Live model connection</span></div><b class="neutral">NOT CONNECTED</b></div><div class="progress"><i style="width:22%;background:var(--violet)"></i></div></div>
+    </div>
+  </section>
+
+  <section class="bottom">
+    <div class="card">
+      <div class="section-title"><h2>Watchlist</h2><span class="eyebrow">Sample values</span></div>
+      <table class="table"><thead><tr><th>Asset</th><th>Demo Price</th><th>Change</th></tr></thead><tbody id="watchlist">
+        <tr><td>RELIANCE</td><td>₹1,428.60</td><td class="green">+1.84%</td></tr>
+        <tr><td>TCS</td><td>₹3,612.20</td><td class="red">−0.42%</td></tr>
+        <tr><td>INFY</td><td>₹1,521.40</td><td class="green">+0.76%</td></tr>
+        <tr><td>NIFTY 50</td><td>₹24,850.00</td><td class="green">+0.31%</td></tr>
+      </tbody></table>
+    </div>
+    <div class="card">
+      <div class="section-title"><h2>AI Insight</h2><span class="eyebrow">EXPLAINED</span></div>
+      <p id="insight" style="font-size:13px;line-height:1.8;color:#c5d2e5;margin:0">डेमो चार्ट में कीमत का रुझान ऊपर की ओर दिखाया गया है। यह असली बाजार विश्लेषण नहीं है।</p>
+      <div class="notice" style="margin-top:14px">अगला चरण: वास्तविक डेटा API और बैकएंड/मॉडल जोड़ना। API key को सार्वजनिक HTML या JavaScript में न रखें; सर्वर-साइड सुरक्षित रखें।</div>
+    </div>
+  </section>
+
+  <div class="notice"><b>महत्वपूर्ण:</b> यह शैक्षिक UI डेमो है। सभी कीमतें, प्रतिशत, confidence और संकेत नमूना/सिम्युलेटेड हैं—लाइव NSE/BSE डेटा नहीं। इसे खरीद-बिक्री का सुझाव न मानें।</div>
+  <footer class="footer">NEUROTRADE AI · Educational prototype · No live data feed connected</footer>
+</div>
+<script>
+const assets={
+ RELIANCE:{price:1428.60,change:1.84,open:1402.20,high:1447.80,low:1395.10,volume:"2.4M"},
+ TCS:{price:3612.20,change:-0.42,open:3630.00,high:3658.40,low:3598.20,volume:"1.1M"},
+ INFY:{price:1521.40,change:0.76,open:1509.10,high:1538.60,low:1498.50,volume:"3.2M"},
+ NIFTY:{price:24850.00,change:0.31,open:24772.00,high:24920.50,low:24690.30,volume:"—"}
+};
+let period="1D",current="RELIANCE",series=[];
+const $=id=>document.getElementById(id);
+function money(n){return "₹"+n.toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function makeSeries(base,change,count=48){let arr=[],v=base*(1-change/100);for(let i=0;i<count;i++){v+=((Math.random()-.47)*base*.004)+(base*change/100/count*.5);arr.push(v)}arr[arr.length-1]=base;return arr}
+function drawChart(){
+ const c=$("chart"),ctx=c.getContext("2d"),rect=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+ c.width=Math.max(1,rect.width*dpr);c.height=Math.max(1,rect.height*dpr);ctx.scale(dpr,dpr);
+ const w=rect.width,h=rect.height,pad={l:8,r:48,t:14,b:22},cw=w-pad.l-pad.r,ch=h-pad.t-pad.b;
+ ctx.clearRect(0,0,w,h);
+ const min=Math.min(...series)*.997,max=Math.max(...series)*1.003,range=max-min||1;
+ const x=i=>pad.l+i*(cw/(series.length-1)),y=v=>pad.t+(max-v)/range*ch;
+ ctx.font="10px system-ui";ctx.lineWidth=1;ctx.strokeStyle="#24334a";ctx.fillStyle="#7f92ad";
+ for(let j=0;j<5;j++){let yy=pad.t+j*ch/4;ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(w-pad.r,yy);ctx.stroke();ctx.fillText((max-j*range/4).toLocaleString("en-IN",{maximumFractionDigits:0}),w-pad.r+5,yy+3)}
+ ctx.beginPath();series.forEach((v,i)=>i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));ctx.lineTo(x(series.length-1),pad.t+ch);ctx.lineTo(x(0),pad.t+ch);ctx.closePath();let grad=ctx.createLinearGradient(0,pad.t,0,h);grad.addColorStop(0,"rgba(53,230,162,.22)");grad.addColorStop(1,"rgba(53,230,162,0)");ctx.fillStyle=grad;ctx.fill();
+ ctx.beginPath();series.forEach((v,i)=>i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));ctx.strokeStyle="#35e6a2";ctx.lineWidth=2;ctx.stroke();
+ const start=series[0],end=series[series.length-1],trendUp=end>=start;ctx.beginPath();ctx.setLineDash([4,4]);ctx.moveTo(x(0),y(start));ctx.lineTo(x(series.length-1),y(end));ctx.strokeStyle=trendUp?"#61a8ff":"#ff647c";ctx.lineWidth=1.4;ctx.stroke();ctx.setLineDash([]);
+ ctx.beginPath();ctx.arc(x(series.length-1),y(end),3.5,0,Math.PI*2);ctx.fillStyle="#35e6a2";ctx.fill();
+}
+function render(){
+ const a=assets[current];series=makeSeries(a.price,a.change,period==="1D"?48:period==="1W"?42:50);
+ $("price").textContent=money(a.price);$("change").textContent=(a.change>=0?"+":"")+a.change.toFixed(2)+"% "+(a.change>=0?"▲":"▼");$("change").style.color=a.change>=0?"var(--green)":"var(--red)";$("change").style.background=a.change>=0?"#10372f":"#3b1b2a";
+ $("subtitle").textContent="Demo price only · "+current+" · Not a live market quote";
+ $("open").textContent=money(a.open);$("high").textContent=money(a.high);$("low").textContent=money(a.low);$("volume").textContent=a.volume;$("periodLabel").textContent="Period: "+period;
+ const conf=54+Math.floor(Math.random()*36)
+ $("confidence").textContent=conf+"%";$("confidenceBar").style.width=conf+"%";
+ let bullish=a.change>=0;$("outlook").textContent=bullish?"Bullish ↗":"Bearish ↘";$("outlook").style.color=bullish?"var(--green)":"var(--red)";
+ $("trend").textContent=bullish?"POSITIVE":"NEGATIVE";$("trend").className=bullish?"up":"down";$("trendbar").style.width=(48+Math.floor(Math.random()*40))+"%";
+ $("volatility").textContent=Math.abs(a.change)>1.5?"HIGH":"MODERATE";$("volbar").style.width=(Math.abs(a.change)>1.5?72:44)+"%";
+ $("insight").textContent=bullish?"इस डेमो डेटा में बदलाव सकारात्मक है। यह वास्तविक बाजार का संकेत नहीं है और इससे भविष्य की कीमत तय नहीं होती।":"इस डेमो डेटा में बदलाव नकारात्मक है। वास्तविक निर्णय के लिए प्रमाणित डेटा और स्वतंत्र शोध जरूरी है।";
+ drawChart();
+}
+$("symbol").addEventListener("change",e=>{current=e.target.value;render()});
+["day","week","month"].forEach((id,i)=>$(id).addEventListener("click",()=>{period=["1D","1W","1M"][i];render()}));
+$("refresh").addEventListener("click",()=>{for(const k in assets){assets[k].price*=1+(Math.random()-.5)*.006;assets[k].change+=(Math.random()-.5)*.5}render();updateWatchlist()});
+function updateWatchlist(){const names=["RELIANCE","TCS","INFY","NIFTY"];const body=$("watchlist");body.innerHTML=names.map(n=>{let a=assets[n],cl=a.change>=0?"green":"red";return `<tr><td>${n}</td><td>${money(a.price)}</td><td class="${cl}">${a.change>=0?"+":""}${a.change.toFixed(2)}%</td></tr>`}).join("")}
+window.addEventListener("resize",drawChart);render();
+</script>
+</body>
+</html>
